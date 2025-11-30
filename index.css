@@ -15,9 +15,67 @@ html {
     margin: 0;
     color: cadetblue;
   }
-  p{
+  p {
     font-size: 1.5rem;
     font-style: italic;
     color: brown;
+  }
+}
+
+/* Content style */
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 3rem;
+}
+
+/* Form Style */
+
+.formContainer {
+  margin-left: 5rem;
+  input {
+    margin-top: 0.5rem;
+    width: 65%;
+    margin-bottom: 2rem;
+    height: 3rem;
+    border: 2px solid cadetblue;
+  }
+  input:focus {
+    outline: none;
+    border-color: cadetblue;
+  }
+
+  label {
+    font-size: large;
+    color: brown;
+  }
+  .btn {
+    text-align: center;
+
+    button {
+      border-radius: 1rem;
+      padding: 0.5rem;
+      width: 15%;
+      height: 15%;
+      background: darkcyan;
+      color: white;
+      outline: none;
+    }
+  }
+}
+
+/* Responsive Styles */
+
+@media screen and (max-width: 640px) {
+  .content {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .formContainer {
+    input {
+      width: 90%;
+    }
   }
 }
