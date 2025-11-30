@@ -65,6 +65,47 @@ html {
   }
 }
 
+
+/* Student Data Style */
+.std-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  height:80vh;
+  overflow-y: scroll;
+  .std-card{
+    dl {
+    display: grid; 
+    grid-template-columns: max-content 1fr; 
+    gap: 10px; 
+    margin: 0; 
+    }
+    dt{
+      font-size: 1.5rem;
+    }
+    dd{
+      font-weight:bold;
+      font-size: 1.5rem;
+      color: darkcyan;
+    }
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    padding:1rem;
+    height: fit-content;
+  }
+}
+
+
+.std-card-btn{
+    float: right;
+    margin-right: 1rem;
+    button{
+        margin-left:0.5rem;
+        border:none;
+        background:none;
+        cursor:pointer;
+    }
+}
+
 /* Responsive Styles */
 
 @media screen and (max-width: 640px) {
@@ -79,3 +120,4 @@ html {
     }
   }
 }
+
