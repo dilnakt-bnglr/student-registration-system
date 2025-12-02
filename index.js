@@ -3,6 +3,10 @@ const studentDataDiv = document.querySelector(".std-data");
 const button = document.querySelector(".addBtn");
 button.addEventListener("click", handleAddStudent);
 
+document.addEventListener('DOMContentLoaded', function() {
+    loadStudentsFromLocalStorage();
+});
+
 // To get the details og student
 function getStudentCardHTML() {
   return `<dl>
@@ -82,7 +86,7 @@ function resetInputField() {
   document.getElementById("stdnumber").value = "";
 }
 
-//Add a student 
+//Add a student
 function handleAddStudent() {
   const studentDetails = {
     studentName: document.getElementById("stdname").value,
@@ -93,26 +97,9 @@ function handleAddStudent() {
 
   const validate = validateUserDetails(studentDetails);
   if (!validate) return;
-
-  const cardDiv = document.createElement("div");
-  cardDiv.classList.add("std-card");
-  const studentValue = getStudentCardHTML.call(studentDetails);
-  cardDiv.innerHTML = studentValue;
-  const btnDiv = document.createElement("div");
-  btnDiv.classList.add("std-card-btn");
-  const editButton = document.createElement("button");
-  editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-  editButton.classList.add("edit-btn");
-  editButton.addEventListener("click", editStudentCard);
-  const deleteButton = document.createElement("button");
-  deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
-  deleteButton.classList.add("delete-btn");
-  deleteButton.addEventListener("click", deleteStudentCard);
-  btnDiv.appendChild(editButton);
-  btnDiv.appendChild(deleteButton);
-  cardDiv.appendChild(btnDiv);
-  studentDataDiv.appendChild(cardDiv);
+  createStudentCard(studentDetails);
   resetInputField();
+  setStudentDetailsToLocalStorage();
 }
 
 //Delete a student card
@@ -120,6 +107,7 @@ function deleteStudentCard(e) {
   const cardDiv = e.target.closest(".std-card");
   if (cardDiv) {
     cardDiv.remove();
+    setStudentDetailsToLocalStorage();
   }
 }
 
@@ -170,4 +158,51 @@ function updateStudentData() {
   document.querySelector(".updatebtn").hidden = true;
   document.querySelector(".addBtn").hidden = false;
   resetInputField();
+  setStudentDetailsToLocalStorage();
+}
+
+//Adding array of students to local storage
+function setStudentDetailsToLocalStorage() {
+  const stdCards = document.querySelectorAll(".std-card");
+  const students = [];
+  stdCards.forEach((card) => {
+    const dd = card.querySelectorAll("dd");
+    students.push({
+      studentName: dd[0].textContent,
+      studentId: dd[1].textContent,
+      studentEmail: dd[2].textContent,
+      studentNumber: dd[3].textContent,
+    });
+  });
+  localStorage.setItem("students", JSON.stringify(students));
+}
+
+//Getting student Details from local storage
+function loadStudentsFromLocalStorage() {
+  const students = JSON.parse(localStorage.getItem("students")) || [];
+  students.forEach((student) => {
+    createStudentCard(student);
+  });
+}
+
+//Student card creation
+function createStudentCard(studentDetails){
+  const cardDiv = document.createElement("div");
+  cardDiv.classList.add("std-card");
+  const studentValue = getStudentCardHTML.call(studentDetails);
+  cardDiv.innerHTML = studentValue;
+  const btnDiv = document.createElement("div");
+  btnDiv.classList.add("std-card-btn");
+  const editButton = document.createElement("button");
+  editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+  editButton.classList.add("edit-btn");
+  editButton.addEventListener("click", editStudentCard);
+  const deleteButton = document.createElement("button");
+  deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+  deleteButton.classList.add("delete-btn");
+  deleteButton.addEventListener("click", deleteStudentCard);
+  btnDiv.appendChild(editButton);
+  btnDiv.appendChild(deleteButton);
+  cardDiv.appendChild(btnDiv);
+  studentDataDiv.appendChild(cardDiv);
 }
