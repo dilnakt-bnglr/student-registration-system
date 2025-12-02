@@ -52,6 +52,8 @@ html {
   }
   .btn {
     text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 
     button {
       border-radius: 1rem;
@@ -121,6 +123,7 @@ html {
   }
 
   .formContainer {
+    margin-left: 3rem;
     input {
       width: 90%;
     }
