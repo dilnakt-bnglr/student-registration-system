@@ -1,3 +1,5 @@
+// My GitHub Link :- https://github.com/dilnakt-bnglr/student-registration-system
+
 var selectedCardToEdit;
 const studentDataDiv = document.querySelector(".std-data");
 const button = document.querySelector(".addBtn");
@@ -5,6 +7,8 @@ button.addEventListener("click", handleAddStudent);
 
 document.addEventListener('DOMContentLoaded', function() {
     loadStudentsFromLocalStorage();
+    studentDataDiv.style.overflowY='auto';
+    studentDataDiv.style.height='80vh';
 });
 
 // To get the details og student
@@ -21,7 +25,7 @@ function getStudentCardHTML() {
     </dl>`;
 }
 
-//Validation for name
+// Validation for name
 function hasNumber(str) {
   for (let ch of str) {
     if (ch >= "0" && ch <= "9") {
@@ -31,7 +35,7 @@ function hasNumber(str) {
   return false;
 }
 
-//Validation for User Details
+// Validation for User Details
 function validateUserDetails(studentDetails) {
   const errorMsgs = document.querySelectorAll(".error-msg");
   if (errorMsgs && errorMsgs.length > 0) {
@@ -78,7 +82,7 @@ function validateUserDetails(studentDetails) {
   return isvalid;
 }
 
-//Reset Input Field
+// Reset Input Field
 function resetInputField() {
   document.getElementById("stdname").value = "";
   document.getElementById("stdid").value = "";
@@ -86,7 +90,7 @@ function resetInputField() {
   document.getElementById("stdnumber").value = "";
 }
 
-//Add a student
+// Add a student
 function handleAddStudent() {
   const studentDetails = {
     studentName: document.getElementById("stdname").value,
@@ -102,7 +106,7 @@ function handleAddStudent() {
   setStudentDetailsToLocalStorage();
 }
 
-//Delete a student card
+// Delete a student card
 function deleteStudentCard(e) {
   const cardDiv = e.target.closest(".std-card");
   if (cardDiv) {
@@ -111,7 +115,7 @@ function deleteStudentCard(e) {
   }
 }
 
-//Edit button functionalities
+// Edit button functionalities
 function editStudentCard(e) {
   selectedCardToEdit = e.target.closest(".std-card");
   if (selectedCardToEdit) {
@@ -135,7 +139,7 @@ function editStudentCard(e) {
   mainBtnDiv.appendChild(updateBtn);
 }
 
-//Updates student card with new details
+// Updates student card with new details
 function updateStudentData() {
   const updatedStudentDetails = {
     studentName: document.getElementById("stdname").value,
@@ -161,7 +165,7 @@ function updateStudentData() {
   setStudentDetailsToLocalStorage();
 }
 
-//Adding array of students to local storage
+// Adding array of students to local storage
 function setStudentDetailsToLocalStorage() {
   const stdCards = document.querySelectorAll(".std-card");
   const students = [];
@@ -177,7 +181,7 @@ function setStudentDetailsToLocalStorage() {
   localStorage.setItem("students", JSON.stringify(students));
 }
 
-//Getting student Details from local storage
+// Getting student Details from local storage
 function loadStudentsFromLocalStorage() {
   const students = JSON.parse(localStorage.getItem("students")) || [];
   students.forEach((student) => {
@@ -185,7 +189,7 @@ function loadStudentsFromLocalStorage() {
   });
 }
 
-//Student card creation
+// Student card creation
 function createStudentCard(studentDetails){
   const cardDiv = document.createElement("div");
   cardDiv.classList.add("std-card");

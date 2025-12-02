@@ -78,9 +78,7 @@ html {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  height:80vh;
-  overflow-y: scroll;
-  .std-card{
+    .std-card{
     dl {
     display: grid; 
     grid-template-columns: max-content 1fr; 
@@ -115,6 +113,7 @@ html {
 
 /* Responsive Styles */
 
+/* Mobile Responsive */
 @media screen and (max-width: 640px) {
   .content {
     display: grid;
@@ -132,6 +131,15 @@ html {
   .std-data{
     display: grid;
     grid-template-columns: 1fr;
+    overflow: unset !important;
   }
 }
 
+/* Tablet Responsive */
+
+@media screen and ((min-width: 641px) and (max-width: 1024px)){
+  .std-data{
+    grid-template-columns: 1fr;
+  }
+  
+}
