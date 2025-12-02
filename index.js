@@ -1,6 +1,9 @@
+var selectedCardToEdit;
 const studentDataDiv = document.querySelector(".std-data");
 const button = document.querySelector(".addBtn");
 button.addEventListener("click", handleAddStudent);
+
+// To get the details og student
 function getStudentCardHTML() {
   return `<dl>
         <dt>Name:</dt>
@@ -14,32 +17,25 @@ function getStudentCardHTML() {
     </dl>`;
 }
 
+//Validation for name
 function hasNumber(str) {
   for (let ch of str) {
     if (ch >= "0" && ch <= "9") {
-      return true; // found a digit
+      return true;
     }
   }
   return false;
 }
 
-function isValidEmail(email) {
-  return email.includes("@") && email.includes(".") && email.trim() === email;
-}
-
-function handleAddStudent() {
+//Validation for User Details
+function validateUserDetails(studentDetails) {
   const errorMsgs = document.querySelectorAll(".error-msg");
-  if(errorMsgs && errorMsgs.length > 0){
-  for(let msg of errorMsgs){
-    msg.remove();
+  if (errorMsgs && errorMsgs.length > 0) {
+    for (let msg of errorMsgs) {
+      msg.remove();
+    }
   }
-}
-  const studentDetails = {
-    studentName: document.getElementById("stdname").value,
-    studentId: document.getElementById("stdid").value,
-    studentEmail: document.getElementById("stdemail").value,
-    studentNumber: document.getElementById("stdnumber").value,
-  };
+  let isvalid = true;
 
   if (
     !studentDetails.studentName ||
@@ -53,7 +49,7 @@ function handleAddStudent() {
     errorMsg.classList.add("error-msg");
     errorMsg.innerHTML = "All fields are required";
     formDiv.insertBefore(errorMsg, formbtn);
-    return;
+    isvalid = false;
   }
 
   if (hasNumber(studentDetails.studentName)) {
@@ -62,36 +58,52 @@ function handleAddStudent() {
     validMsg.classList.add("error-msg");
     validMsg.innerHTML = "Name should be in text format only.";
     stdName.insertAdjacentElement("afterend", validMsg);
-    return;
+    isvalid = false;
   }
-  if (studentDetails.studentNumber.length !== 10) {
+  if (
+    studentDetails.studentNumber &&
+    studentDetails.studentNumber.length !== 10
+  ) {
     const stdNumber = document.querySelector("#stdnumber");
     const validMsg = document.createElement("p");
     validMsg.classList.add("error-msg");
     validMsg.innerHTML = "Mobile number should be of 10 digits.";
     stdNumber.insertAdjacentElement("afterend", validMsg);
-    return;
+    isvalid = false;
   }
+  return isvalid;
+}
 
-//   if(isValidEmail(studentDetails.studentEmail)){
-//     const stdEmail=document.querySelector("#stdemail");
-//     const validMsg = document.createElement("p");
-//     validMsg.classList.add("error-msg");
-//     validMsg.innerHTML="Enter a valid email";
-//     stdEmail.insertAdjacentElement("afterend",validMsg);
-//     return;
-//   }
+//Reset Input Field
+function resetInputField() {
+  document.getElementById("stdname").value = "";
+  document.getElementById("stdid").value = "";
+  document.getElementById("stdemail").value = "";
+  document.getElementById("stdnumber").value = "";
+}
+
+//Add a student 
+function handleAddStudent() {
+  const studentDetails = {
+    studentName: document.getElementById("stdname").value,
+    studentId: document.getElementById("stdid").value,
+    studentEmail: document.getElementById("stdemail").value,
+    studentNumber: document.getElementById("stdnumber").value,
+  };
+
+  const validate = validateUserDetails(studentDetails);
+  if (!validate) return;
 
   const cardDiv = document.createElement("div");
   cardDiv.classList.add("std-card");
-  const a = getStudentCardHTML.call(studentDetails);
-  cardDiv.innerHTML = a;
+  const studentValue = getStudentCardHTML.call(studentDetails);
+  cardDiv.innerHTML = studentValue;
   const btnDiv = document.createElement("div");
   btnDiv.classList.add("std-card-btn");
   const editButton = document.createElement("button");
   editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
   editButton.classList.add("edit-btn");
-  editButton.addEventListener("click",editStudentCard);
+  editButton.addEventListener("click", editStudentCard);
   const deleteButton = document.createElement("button");
   deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
   deleteButton.classList.add("delete-btn");
@@ -100,8 +112,10 @@ function handleAddStudent() {
   btnDiv.appendChild(deleteButton);
   cardDiv.appendChild(btnDiv);
   studentDataDiv.appendChild(cardDiv);
+  resetInputField();
 }
 
+//Delete a student card
 function deleteStudentCard(e) {
   const cardDiv = e.target.closest(".std-card");
   if (cardDiv) {
@@ -109,16 +123,51 @@ function deleteStudentCard(e) {
   }
 }
 
-function editStudentCard(e){
-    const cardDiv = e.target.closest(".std-card");
-    if (cardDiv) {
-        const ddElements = cardDiv.querySelectorAll("dd");
-        const values = Array.from(ddElements).map(dd => dd.textContent);
-        console.log(values);
-        document.getElementById("stdname").value=values[0]; 
-        document.getElementById("stdid").value=values[1];
-        document.getElementById("stdemail").value=values[2];
-        document.getElementById("stdnumber").value=values[3];
-        // [studentName, studentId, studentEmail, studentNumber]
-    }
+//Edit button functionalities
+function editStudentCard(e) {
+  selectedCardToEdit = e.target.closest(".std-card");
+  if (selectedCardToEdit) {
+    const ddElements = selectedCardToEdit.querySelectorAll("dd");
+    const values = Array.from(ddElements).map((dd) => dd.textContent);
+    document.getElementById("stdname").value = values[0];
+    document.getElementById("stdid").value = values[1];
+    document.getElementById("stdemail").value = values[2];
+    document.getElementById("stdnumber").value = values[3];
+  }
+  document.querySelector(".addBtn").hidden = true;
+  const mainBtnDiv = document.querySelector(".btn");
+  const oldUpdateBtn = mainBtnDiv.querySelector(".updatebtn");
+  if (oldUpdateBtn) {
+    oldUpdateBtn.remove();
+  }
+  const updateBtn = document.createElement("button");
+  updateBtn.classList.add("updatebtn");
+  updateBtn.innerHTML = "Update";
+  updateBtn.addEventListener("click", updateStudentData);
+  mainBtnDiv.appendChild(updateBtn);
+}
+
+//Updates student card with new details
+function updateStudentData() {
+  const updatedStudentDetails = {
+    studentName: document.getElementById("stdname").value,
+    studentId: document.getElementById("stdid").value,
+    studentEmail: document.getElementById("stdemail").value,
+    studentNumber: document.getElementById("stdnumber").value,
+  };
+  const validate = validateUserDetails(updatedStudentDetails);
+  if (!validate) return;
+  const existingStudentDetailsElement = selectedCardToEdit.querySelector("dl");
+  const updatedStudentDetailsElement = getStudentCardHTML.call(
+    updatedStudentDetails
+  );
+  const newStudentElement = document.createElement("div");
+  newStudentElement.innerHTML = updatedStudentDetailsElement;
+  selectedCardToEdit.replaceChild(
+    newStudentElement,
+    existingStudentDetailsElement
+  );
+  document.querySelector(".updatebtn").hidden = true;
+  document.querySelector(".addBtn").hidden = false;
+  resetInputField();
 }
